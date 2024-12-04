@@ -1,0 +1,23 @@
+# Compilados Java
+*.class
+
+# Pastas de build
+/build/
+/target/
+
+# Configurações de IDE
+/.idea/
+/*.iml
+/.settings/
+/.classpath
+/.project
+
+# Arquivos temporários
+.DS_Store
+._*
+
+# Arquivos de log
+*.log
+
+# Arquivos temporários
+*.tmp
