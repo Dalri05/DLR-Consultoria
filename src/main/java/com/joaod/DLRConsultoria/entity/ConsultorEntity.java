@@ -2,12 +2,14 @@ package com.joaod.DLRConsultoria.entity;
 
 import com.joaod.DLRConsultoria.enums.SituacaoConsultorEnum;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "consultores")
+@Data
 public class ConsultorEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +34,8 @@ public class ConsultorEntity {
 
     @ManyToMany
     private List<EmpresaEntity> empresasResponsaveis;
+
+    private Date dataAlteracao;
+
 }
+
