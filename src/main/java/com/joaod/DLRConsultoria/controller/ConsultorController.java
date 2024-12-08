@@ -27,9 +27,9 @@ public class ConsultorController {
     }
     
     @PutMapping("/editar/{cpf}")
-    private ResponseEntity editarCadastroConsultor(@PathVariable String cpf, @RequestBody ConsultorEntity novosDados) {
+    private ResponseEntity editarCadastroConsultor(@PathVariable String cpf, @RequestBody ConsultorEntity consultor) {
         try {
-            return consultorService.editarCadastroConsultor(cpf, novosDados);
+            return consultorService.editarCadastroConsultor(cpf, consultor);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().build();

@@ -3,10 +3,12 @@ package com.joaod.DLRConsultoria.service;
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
 import com.joaod.DLRConsultoria.repository.ConsultorRepository;
 import io.micrometer.common.util.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -60,10 +62,9 @@ public class ConsultorService {
             if (!novosDados.getCpf().equals(cpf))
                 return ResponseEntity.badRequest().body("Não é possivel trocar o cpf de um consultor");
 
-            consultor.setSituacao(novosDados.getSituacao());
-            consultor.setNome(novosDados.getNome());
-            consultor.setEmail(novosDados.getEmail());
-            consultor.setTelefone(novosDados.getTelefone());
+            BeanUtils.copyProperties(novosDados, consultor, "id", "cpf", "dataCadastro");
+
+            consultor.setDataAlteracao(new Date());
             consultorRepository.save(consultor);
 
             return ResponseEntity.ok().body("Consultor atualizado com sucesso!");
