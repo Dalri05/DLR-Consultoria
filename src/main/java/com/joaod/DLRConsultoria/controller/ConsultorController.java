@@ -51,7 +51,7 @@ public class ConsultorController {
         return consultorService.listarConsultorByCpf(cpf);
     }
 
-    @GetMapping("/listar-consultores")
+    @GetMapping("/listar")
     private List<ConsultorEntity> listarConsultores() {
         return consultorService.listarTodosConsultores();
     }
