@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "clientes")
 @Data
@@ -26,6 +28,10 @@ public class ClientesEntity {
     @Column(unique = true, nullable = false)
     private String cpf;
 
+    private Date dataCadastro = new Date();
+
     @ManyToOne
     private EmpresaEntity empresaResponsavel;
+
+    private Date dataAlteracao;
 }

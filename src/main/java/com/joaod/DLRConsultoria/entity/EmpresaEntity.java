@@ -28,8 +28,8 @@ public class EmpresaEntity {
     @OneToMany
     private List<ContratoEntity> contratosEmpresa;
 
-    @ManyToMany
-    private List<ConsultorEntity> consultores;
+    @ManyToOne
+    private ConsultorEntity consultador;
 
     @OneToMany
     private List<ClientesEntity> clientes;

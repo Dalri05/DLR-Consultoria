@@ -14,8 +14,4 @@ public enum SituacaoConsultorEnum {
         return situacao;
     }
 
-    public void setSituacao(int situacao) {
-        this.situacao = situacao;
-    }
-
 }

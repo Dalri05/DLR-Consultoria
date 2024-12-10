@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,7 +34,8 @@ public class ClienteService {
             return ResponseEntity.ofNullable("Cliente não encontrado");
         }
 
-        BeanUtils.copyProperties(novosDados, cliente);
+        BeanUtils.copyProperties(novosDados, cliente, "id", "cpf", "dataCadastro");
+        cliente.setDataAlteracao(new Date());
         clienteRepository.save(cliente);
 
         return ResponseEntity.ok().body("Cliente alterado com sucesso");

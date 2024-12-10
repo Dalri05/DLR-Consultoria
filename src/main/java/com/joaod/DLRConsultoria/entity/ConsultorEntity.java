@@ -34,7 +34,7 @@ public class ConsultorEntity {
    @Enumerated(EnumType.STRING)
    private SituacaoConsultorEnum situacao;
 
-    @ManyToMany
+    @OneToMany
     private List<EmpresaEntity> empresasResponsaveis;
 
     private Date dataAlteracao;
