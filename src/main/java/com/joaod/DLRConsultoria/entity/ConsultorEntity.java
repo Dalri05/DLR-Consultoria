@@ -31,8 +31,8 @@ public class ConsultorEntity {
     @Column(nullable = false, unique = true)
     private String cpf;
 
-   @Enumerated(EnumType.STRING)
-   private SituacaoConsultorEnum situacao;
+    @Enumerated(EnumType.STRING)
+    private SituacaoConsultorEnum situacao;
 
     @OneToMany
     private List<EmpresaEntity> empresasResponsaveis;
