@@ -19,7 +19,7 @@ public class ConsultorController {
     @Autowired
     private EnvioEmailService envioEmailService;
 
-    @PostMapping("/novo-consultor")
+    @PostMapping("/criar")
     private ResponseEntity criarConsultor(@RequestBody ConsultorEntity consultor) {
         try {
             String response = consultorService.criarConsultor(consultor);

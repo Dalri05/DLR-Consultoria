@@ -1,6 +1,7 @@
 package com.joaod.DLRConsultoria.service;
 
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
+import com.joaod.DLRConsultoria.entity.EmpresaEntity;
 import com.joaod.DLRConsultoria.repository.ConsultorRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -8,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class ConsultorService {
@@ -73,6 +71,22 @@ public class ConsultorService {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
+    }
+
+    public void salvarConsultor(ConsultorEntity consultor) {
+        ConsultorEntity consultorExistente = consultorRepository.findByCpf(consultor.getCpf());
+
+        if (consultorExistente.getEmpresasResponsaveis() == null) {
+            consultorExistente.setEmpresasResponsaveis(new ArrayList<>());
+        }
+
+        for (EmpresaEntity novaEmpresa : consultor.getEmpresasResponsaveis()) {
+            if (!consultorExistente.getEmpresasResponsaveis().contains(novaEmpresa)) {
+                consultorExistente.getEmpresasResponsaveis().add(novaEmpresa);
+            }
+        }
+
+        consultorRepository.save(consultorExistente);
     }
 
     public ConsultorEntity listarConsultorByCpf(String cpf) {

@@ -1,12 +1,15 @@
 package com.joaod.DLRConsultoria.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "empresas")
+@Data
 public class EmpresaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,12 +29,14 @@ public class EmpresaEntity {
     private Date dataUltimoContrato;
 
     @OneToMany
+    @JsonIgnore
     private List<ContratoEntity> contratosEmpresa;
 
     @ManyToOne
     private ConsultorEntity consultador;
 
     @OneToMany
+    @JsonIgnore
     private List<ClientesEntity> clientes;
 
 }

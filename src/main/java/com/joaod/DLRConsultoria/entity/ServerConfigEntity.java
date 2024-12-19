@@ -11,5 +11,5 @@ public class ServerConfigEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    private int flagEnviaEmailContratoCliente = 0;
+    private int flagEnviaEmailContratoConsultor = 0;
 }

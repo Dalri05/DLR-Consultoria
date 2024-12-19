@@ -29,5 +29,6 @@ public class ContratoEntity {
 
     private Date dataAlteracao;
 
+    private String codigoUnicoContrato = String.valueOf(GenerationType.UUID);
 
 }
