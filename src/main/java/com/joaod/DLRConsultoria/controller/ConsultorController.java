@@ -2,10 +2,12 @@ package com.joaod.DLRConsultoria.controller;
 
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
 import com.joaod.DLRConsultoria.service.ConsultorService;
+import com.joaod.DLRConsultoria.service.EnvioEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -13,6 +15,9 @@ import java.util.List;
 public class ConsultorController {
     @Autowired
     private ConsultorService consultorService;
+
+    @Autowired
+    private EnvioEmailService envioEmailService;
 
     @PostMapping("/novo-consultor")
     private ResponseEntity criarConsultor(@RequestBody ConsultorEntity consultor) {
