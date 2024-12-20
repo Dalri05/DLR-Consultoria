@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/consultor")
@@ -52,7 +53,7 @@ public class ConsultorController {
     }
 
     @GetMapping("/listar/{cpf}")
-    private ConsultorEntity listarConsultorByCpf(@PathVariable String cpf) {
+    private Optional<ConsultorEntity> listarConsultorByCpf(@PathVariable String cpf) {
         return consultorService.listarConsultorByCpf(cpf);
     }
 

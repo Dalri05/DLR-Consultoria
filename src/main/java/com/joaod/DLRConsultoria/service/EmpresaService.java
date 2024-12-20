@@ -29,8 +29,8 @@ public class EmpresaService {
         if (empresaExistenteOpt.isPresent()) {
             EmpresaEntity empresaExistente = empresaExistenteOpt.get();
 
-            if (empresaExistente.getConsultador() == null) {
-                empresaExistente.setConsultador(empresa.getConsultador());
+            if (empresaExistente.getConsultor() == null) {
+                empresaExistente.setConsultor(empresa.getConsultor());
             }
 
             if (novosContratos != null && !novosContratos.isEmpty()) {

@@ -69,35 +69,43 @@ public class ContratoService {
         EmpresaEntity empresaContrato = contrato.getEmpresa();
         ConsultorEntity consultorResponsavel = contrato.getConsultorResponsavel();
 
-        if (empresaContrato == null || consultorResponsavel == null) {
-            throw new IllegalArgumentException("Empresa ou Consultor não podem ser nulos.");
+        try {
+
+            if (empresaContrato == null || consultorResponsavel == null) {
+                throw new IllegalArgumentException("Empresa ou Consultor não podem ser nulos.");
+            }
+
+            Optional<EmpresaEntity> empresaExistenteOpt = empresaService.buscarEmpresaPorCnpj(empresaContrato.getCnpj());
+            if (!empresaExistenteOpt.isPresent()) {
+                throw new IllegalArgumentException("A empresa com o CNPJ " + empresaContrato.getCnpj() + " não existe!");
+            }
+
+            EmpresaEntity empresaExistente = empresaExistenteOpt.get();
+
+            Optional<ConsultorEntity> consultorExistenteOpt = consultorService.buscarConsultorPorCpf(consultorResponsavel.getCpf());
+            if (!consultorExistenteOpt.isPresent()) {
+                throw new IllegalArgumentException("O consultor não existe!");
+            }
+
+            ConsultorEntity consultorExistente = consultorExistenteOpt.get();
+
+            if (empresaExistente.getConsultor() == null || !empresaExistente.getConsultor().equals(consultorExistente)) {
+                empresaExistente.setConsultor(consultorExistente);
+                empresaService.salvarEmpresa(empresaExistente);
+            }
+
+            if (consultorExistente.getEmpresasResponsaveis() == null) {
+                consultorExistente.setEmpresasResponsaveis(new ArrayList<>());
+            }
+            if (!consultorExistente.getEmpresasResponsaveis().contains(empresaExistente)) {
+                consultorExistente.getEmpresasResponsaveis().add(empresaExistente);
+                consultorService.salvarConsultor(consultorExistente);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        Optional<EmpresaEntity> empresaExistenteOpt = empresaService.buscarEmpresaPorCnpj(empresaContrato.getCnpj());
-        if (!empresaExistenteOpt.isPresent()) {
-            throw new IllegalArgumentException("A empresa com o CNPJ " + empresaContrato.getCnpj() + " não existe!");
-        }
-
-        EmpresaEntity empresaExistente = empresaExistenteOpt.get();
-
-        if (Objects.isNull(empresaExistente.getConsultador()) || !empresaExistente.getConsultador().equals(consultorResponsavel)) {
-            empresaExistente.setConsultador(consultorResponsavel);
-
-            if (Objects.isNull(consultorResponsavel.getEmpresasResponsaveis()))
-                consultorResponsavel.setEmpresasResponsaveis(new ArrayList<>());
-
-            consultorResponsavel.getEmpresasResponsaveis().add(empresaExistente);
-            empresaService.salvarEmpresa(empresaExistente);
-        }
-
-        if (consultorResponsavel.getEmpresasResponsaveis() == null) {
-            consultorResponsavel.setEmpresasResponsaveis(new ArrayList<>());
-        }
-        if (!consultorResponsavel.getEmpresasResponsaveis().contains(empresaContrato)) {
-            consultorResponsavel.getEmpresasResponsaveis().add(empresaContrato);
-        }
-        consultorService.salvarConsultor(consultorResponsavel);
     }
+
 
 
     private void enviarEmailContrato(ContratoEntity contrato) {

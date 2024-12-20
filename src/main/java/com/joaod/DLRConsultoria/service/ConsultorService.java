@@ -35,14 +35,14 @@ public class ConsultorService {
     public ResponseEntity deletarConsultorbyCpf(String cpf){
         try {
             String resposta = null;
-            ConsultorEntity consultor = consultorRepository.findByCpf(cpf);
+            Optional<ConsultorEntity> consultor = consultorRepository.findByCpf(cpf);
 
-            if (Objects.isNull(consultor)) {
+            if (consultor.isEmpty()) {
                 resposta = "Esse CPF não é cadastrado como um consultor!";
                 return ResponseEntity.unprocessableEntity().body(resposta);
             }
 
-            consultorRepository.delete(consultor);
+            consultorRepository.delete(consultor.get());
 
             resposta = "Copnsultor deletado com sucesso!";
             return ResponseEntity.ok().body(resposta);
@@ -55,7 +55,12 @@ public class ConsultorService {
 
     public ResponseEntity editarCadastroConsultor(String cpf, ConsultorEntity novosDados) {
         try {
-            ConsultorEntity consultor = consultorRepository.findByCpf(cpf);
+            Optional<ConsultorEntity> consultorOpt = consultorRepository.findByCpf(cpf);
+            ConsultorEntity consultor = new ConsultorEntity();
+
+            if (consultorOpt.isPresent()) {
+                consultor = consultorOpt.get();
+            }
 
             if (Objects.isNull(consultor))
                 return ResponseEntity.unprocessableEntity().body("Consultor não encontrado, realize um cadastro!");
@@ -77,9 +82,14 @@ public class ConsultorService {
     }
 
     public void salvarConsultor(ConsultorEntity consultor) {
-        ConsultorEntity consultorExistente = consultorRepository.findByCpf(consultor.getCpf());
+        Optional<ConsultorEntity> consultorExistenteOpt = consultorRepository.findByCpf(consultor.getCpf());
+        ConsultorEntity consultorExistente = new ConsultorEntity();
 
-        if (consultorExistente.getEmpresasResponsaveis() == null) {
+        if (consultorExistenteOpt.isPresent()) {
+            consultorExistente = consultorExistenteOpt.get();
+        }
+
+        if (Objects.nonNull(consultorExistente) && consultorExistente.getEmpresasResponsaveis() == null) {
             consultorExistente.setEmpresasResponsaveis(new ArrayList<>());
         }
 
@@ -92,7 +102,11 @@ public class ConsultorService {
         consultorRepository.save(consultorExistente);
     }
 
-    public ConsultorEntity listarConsultorByCpf(String cpf) {
+    public Optional<ConsultorEntity> buscarConsultorPorCpf(String cpf) {
+        return consultorRepository.findByCpf(cpf);
+    }
+
+    public Optional<ConsultorEntity> listarConsultorByCpf(String cpf) {
         return consultorRepository.findByCpf(cpf);
     }
 

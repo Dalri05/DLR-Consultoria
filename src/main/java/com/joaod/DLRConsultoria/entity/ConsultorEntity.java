@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class ConsultorEntity {
     @Enumerated(EnumType.STRING)
     private SituacaoConsultorEnum situacao;
 
-    @OneToMany
-    private List<EmpresaEntity> empresasResponsaveis;
+    @OneToMany(mappedBy = "consultor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EmpresaEntity> empresasResponsaveis = new ArrayList<>();
 
     private Date dataAlteracao;
 

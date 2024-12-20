@@ -33,7 +33,8 @@ public class EmpresaEntity {
     private List<ContratoEntity> contratosEmpresa;
 
     @ManyToOne
-    private ConsultorEntity consultador;
+    @JoinColumn(name = "consultor_id")
+    private ConsultorEntity consultor;
 
     @OneToMany
     @JsonIgnore
