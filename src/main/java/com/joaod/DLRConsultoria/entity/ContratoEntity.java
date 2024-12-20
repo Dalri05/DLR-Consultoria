@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "contratos")
@@ -21,7 +22,7 @@ public class ContratoEntity {
     @ManyToOne
     private EmpresaEntity empresa;
 
-    @OneToOne
+    @ManyToOne
     private ConsultorEntity consultorResponsavel;
 
     @Enumerated(EnumType.STRING)
@@ -29,6 +30,7 @@ public class ContratoEntity {
 
     private Date dataAlteracao;
 
-    private String codigoUnicoContrato = String.valueOf(GenerationType.UUID);
+    @Column(unique = true, nullable = false)
+    private String codigoUnicoContrato = UUID.randomUUID().toString();
 
 }

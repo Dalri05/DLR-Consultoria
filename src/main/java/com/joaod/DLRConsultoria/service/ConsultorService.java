@@ -1,6 +1,7 @@
 package com.joaod.DLRConsultoria.service;
 
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
+import com.joaod.DLRConsultoria.entity.ContratoEntity;
 import com.joaod.DLRConsultoria.entity.EmpresaEntity;
 import com.joaod.DLRConsultoria.repository.ConsultorRepository;
 import com.joaod.DLRConsultoria.repository.EmpresaRepository;
@@ -96,6 +97,12 @@ public class ConsultorService {
         for (EmpresaEntity novaEmpresa : consultor.getEmpresasResponsaveis()) {
             if (!consultorExistente.getEmpresasResponsaveis().contains(novaEmpresa)) {
                 consultorExistente.getEmpresasResponsaveis().add(novaEmpresa);
+            }
+        }
+
+        for (ContratoEntity novoContrato : consultor.getContratos()) {
+            if (!consultorExistente.getContratos().contains(novoContrato)) {
+                consultorExistente.getContratos().add(novoContrato);
             }
         }
 

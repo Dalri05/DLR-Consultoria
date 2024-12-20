@@ -40,5 +40,8 @@ public class ConsultorEntity {
 
     private Date dataAlteracao;
 
+    @OneToMany(mappedBy = "consultorResponsavel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ContratoEntity> contratos = new ArrayList<>();
+
 }
 

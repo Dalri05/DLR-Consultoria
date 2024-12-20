@@ -4,6 +4,7 @@ import com.joaod.DLRConsultoria.entity.ConsultorEntity;
 import com.joaod.DLRConsultoria.entity.ContratoEntity;
 import com.joaod.DLRConsultoria.entity.EmpresaEntity;
 import com.joaod.DLRConsultoria.entity.ServerConfigEntity;
+import com.joaod.DLRConsultoria.repository.ConsultorRepository;
 import com.joaod.DLRConsultoria.repository.ContratoRepository;
 import com.joaod.DLRConsultoria.repository.EmpresaRepository;
 import org.springframework.beans.BeanUtils;
@@ -21,6 +22,12 @@ public class ContratoService {
     private EmpresaService empresaService;
     @Autowired
     private ConsultorService consultorService;
+    @Autowired
+    private EnvioEmailService envioEmailService;
+    @Autowired
+    private EmpresaRepository empresaRepository;
+    @Autowired
+    private ConsultorRepository consultorRepository;
 
     public ResponseEntity editarContrato(Integer id, ContratoEntity novosDados) {
         Optional<ContratoEntity> contrato = contratoRepository.findById(id);
@@ -49,68 +56,65 @@ public class ContratoService {
     }
 
     public ResponseEntity criarContrato(ContratoEntity contrato) {
-        if (Objects.isNull(contrato)) return ResponseEntity.ofNullable("Contrato inválido!");
-
-        EmpresaEntity empresaContrato = contrato.getEmpresa();
-        ConsultorEntity consultorReponsavel = contrato.getConsultorResponsavel();
+        if (Objects.isNull(contrato)) {
+            return ResponseEntity.badRequest().body("Contrato inválido!");
+        }
 
         try {
             validarAtualizarEmpresaConsultor(contrato);
-            enviarEmailContrato(contrato);
+
+            contrato.setConsultorResponsavel(
+                    consultorService.buscarConsultorPorCpf(contrato.getConsultorResponsavel().getCpf())
+                            .orElseThrow(() -> new IllegalArgumentException("Consultor não encontrado!"))
+            );
+            contrato.setEmpresa(
+                    empresaService.buscarEmpresaPorCnpj(contrato.getEmpresa().getCnpj())
+                            .orElseThrow(() -> new IllegalArgumentException("Empresa não encontrada!"))
+            );
+
             contratoRepository.save(contrato);
+            enviarEmailContrato(contrato);
+
             return ResponseEntity.ok("Contrato criado com sucesso!");
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.internalServerError().build();
+            return ResponseEntity.internalServerError().body("Erro ao criar contrato!");
         }
     }
+
 
     private void validarAtualizarEmpresaConsultor(ContratoEntity contrato) {
         EmpresaEntity empresaContrato = contrato.getEmpresa();
         ConsultorEntity consultorResponsavel = contrato.getConsultorResponsavel();
 
-        try {
+        if (empresaContrato == null || consultorResponsavel == null) {
+            throw new IllegalArgumentException("Empresa ou Consultor não podem ser nulos.");
+        }
 
-            if (empresaContrato == null || consultorResponsavel == null) {
-                throw new IllegalArgumentException("Empresa ou Consultor não podem ser nulos.");
-            }
+        Optional<EmpresaEntity> empresaExistenteOpt = empresaService.buscarEmpresaPorCnpj(empresaContrato.getCnpj());
+        EmpresaEntity empresaExistente = empresaExistenteOpt
+                .orElseThrow(() -> new IllegalArgumentException("A empresa com o CNPJ " + empresaContrato.getCnpj() + " não existe!"));
 
-            Optional<EmpresaEntity> empresaExistenteOpt = empresaService.buscarEmpresaPorCnpj(empresaContrato.getCnpj());
-            if (!empresaExistenteOpt.isPresent()) {
-                throw new IllegalArgumentException("A empresa com o CNPJ " + empresaContrato.getCnpj() + " não existe!");
-            }
+        Optional<ConsultorEntity> consultorExistenteOpt = consultorService.buscarConsultorPorCpf(consultorResponsavel.getCpf());
+        ConsultorEntity consultorExistente = consultorExistenteOpt
+                .orElseThrow(() -> new IllegalArgumentException("O consultor com o CPF " + consultorResponsavel.getCpf() + " não existe!"));
 
-            EmpresaEntity empresaExistente = empresaExistenteOpt.get();
+        if (empresaExistente.getConsultor() == null || !empresaExistente.getConsultor().equals(consultorExistente)) {
+            empresaExistente.setConsultor(consultorExistente);
+            empresaService.salvarEmpresa(empresaExistente);
+        }
 
-            Optional<ConsultorEntity> consultorExistenteOpt = consultorService.buscarConsultorPorCpf(consultorResponsavel.getCpf());
-            if (!consultorExistenteOpt.isPresent()) {
-                throw new IllegalArgumentException("O consultor não existe!");
-            }
-
-            ConsultorEntity consultorExistente = consultorExistenteOpt.get();
-
-            if (empresaExistente.getConsultor() == null || !empresaExistente.getConsultor().equals(consultorExistente)) {
-                empresaExistente.setConsultor(consultorExistente);
-                empresaService.salvarEmpresa(empresaExistente);
-            }
-
-            if (consultorExistente.getEmpresasResponsaveis() == null) {
-                consultorExistente.setEmpresasResponsaveis(new ArrayList<>());
-            }
-            if (!consultorExistente.getEmpresasResponsaveis().contains(empresaExistente)) {
-                consultorExistente.getEmpresasResponsaveis().add(empresaExistente);
-                consultorService.salvarConsultor(consultorExistente);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!consultorExistente.getEmpresasResponsaveis().contains(empresaExistente)) {
+            consultorExistente.getEmpresasResponsaveis().add(empresaExistente);
+            consultorService.salvarConsultor(consultorExistente);
         }
     }
 
 
 
+
     private void enviarEmailContrato(ContratoEntity contrato) {
         try {
-            EnvioEmailService envioEmailService = new EnvioEmailService();
             ConsultorEntity consultorResponsavel = contrato.getConsultorResponsavel();
             ServerConfigEntity config = new ServerConfigEntity();
             EmpresaEntity empresaContrato = contrato.getEmpresa();

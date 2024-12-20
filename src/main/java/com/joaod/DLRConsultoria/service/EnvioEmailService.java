@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class EnvioEmailService {
     @Autowired
     private EmailRepository emailRepository;
     @Autowired
-    private JavaMailSender mailSender;
+    JavaMailSender mailSender;
 
     public void enviarEmail(List<String> listDestinatarios, String corpoEmail, String tituloEmail) throws Exception {
         if (Objects.isNull(listDestinatarios) || listDestinatarios.isEmpty()) return;
