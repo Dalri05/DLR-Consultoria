@@ -3,6 +3,7 @@ package com.joaod.DLRConsultoria.service;
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
 import com.joaod.DLRConsultoria.entity.EmpresaEntity;
 import com.joaod.DLRConsultoria.repository.ConsultorRepository;
+import com.joaod.DLRConsultoria.repository.EmpresaRepository;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import java.util.*;
 @Service
 public class ConsultorService {
     @Autowired
-    ConsultorRepository consultorRepository;
+    private ConsultorRepository consultorRepository;
+    @Autowired
+    private EmpresaRepository empresaRepository;
 
     public String criarConsultor (ConsultorEntity consultor) {
         if (Objects.isNull(consultor)) return "Passe os dados para criar um consultor!";

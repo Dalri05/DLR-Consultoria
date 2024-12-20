@@ -75,13 +75,18 @@ public class ContratoService {
 
         Optional<EmpresaEntity> empresaExistenteOpt = empresaService.buscarEmpresaPorCnpj(empresaContrato.getCnpj());
         if (!empresaExistenteOpt.isPresent()) {
-            throw new IllegalArgumentException("A empresa com o CNPJ " + empresaContrato.getCnpj() + " não existe, criando o registro!");
+            throw new IllegalArgumentException("A empresa com o CNPJ " + empresaContrato.getCnpj() + " não existe!");
         }
 
         EmpresaEntity empresaExistente = empresaExistenteOpt.get();
 
-        if (!empresaExistente.getConsultador().equals(consultorResponsavel)) {
+        if (Objects.isNull(empresaExistente.getConsultador()) || !empresaExistente.getConsultador().equals(consultorResponsavel)) {
             empresaExistente.setConsultador(consultorResponsavel);
+
+            if (Objects.isNull(consultorResponsavel.getEmpresasResponsaveis()))
+                consultorResponsavel.setEmpresasResponsaveis(new ArrayList<>());
+
+            consultorResponsavel.getEmpresasResponsaveis().add(empresaExistente);
             empresaService.salvarEmpresa(empresaExistente);
         }
 
