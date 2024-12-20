@@ -28,13 +28,12 @@ public class EnvioEmailService {
         try {
             for (String destinatario : listDestinatarios) {
                 MimeMessage mimeMessage = mailSender.createMimeMessage();
-                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+                MimeMessageHelper mail = new MimeMessageHelper(mimeMessage, "utf-8");
 
-                helper.setTo(destinatario);
-                helper.setSubject(tituloEmail);
-                helper.setText(corpoEmail, true);
+                mail.setTo(destinatario);
+                mail.setSubject(tituloEmail);
+                mail.setText(corpoEmail, true);
 
-                // Envio do e-mail
                 mailSender.send(mimeMessage);
             }
         } catch (MessagingException e) {
