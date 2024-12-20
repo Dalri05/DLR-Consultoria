@@ -110,9 +110,6 @@ public class ContratoService {
         }
     }
 
-
-
-
     private void enviarEmailContrato(ContratoEntity contrato) {
         try {
             ConsultorEntity consultorResponsavel = contrato.getConsultorResponsavel();

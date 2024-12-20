@@ -2,10 +2,13 @@ package com.joaod.DLRConsultoria.service;
 
 import com.joaod.DLRConsultoria.repository.EmailRepository;
 import jakarta.activation.DataHandler;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -24,15 +27,19 @@ public class EnvioEmailService {
 
         try {
             for (String destinatario : listDestinatarios) {
-                SimpleMailMessage mailMessage = new SimpleMailMessage();
-                mailMessage.setTo(destinatario);
-                mailMessage.setSubject(tituloEmail);
-                mailMessage.setText(corpoEmail);
-                mailSender.send(mailMessage);
+                MimeMessage mimeMessage = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+
+                helper.setTo(destinatario);
+                helper.setSubject(tituloEmail);
+                helper.setText(corpoEmail, true);
+
+                // Envio do e-mail
+                mailSender.send(mimeMessage);
             }
-        } catch (Exception e) {
+        } catch (MessagingException e) {
             e.printStackTrace();
-            throw new Exception();
+            throw new Exception("Erro ao enviar e-mail.", e);
         }
     }
 
