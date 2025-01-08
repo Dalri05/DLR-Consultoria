@@ -1,7 +1,7 @@
 package com.joaod.DLRConsultoria.controller;
 
 import com.joaod.DLRConsultoria.entity.ContratoEntity;
-import com.joaod.DLRConsultoria.service.ContratoService;
+import com.joaod.DLRConsultoria.service.contrato.ContratoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.joaod.DLRConsultoria.service;
+package com.joaod.DLRConsultoria.service.email;
 
 public class MontarCorpoEmailService {
 

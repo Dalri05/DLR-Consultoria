@@ -2,12 +2,11 @@ package com.joaod.DLRConsultoria.controller;
 
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
 import com.joaod.DLRConsultoria.service.ConsultorService;
-import com.joaod.DLRConsultoria.service.EnvioEmailService;
+import com.joaod.DLRConsultoria.service.email.EnvioEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

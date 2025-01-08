@@ -1,4 +1,4 @@
-package com.joaod.DLRConsultoria.service;
+package com.joaod.DLRConsultoria.service.contrato;
 
 import com.joaod.DLRConsultoria.entity.ConsultorEntity;
 import com.joaod.DLRConsultoria.entity.ContratoEntity;
@@ -7,6 +7,10 @@ import com.joaod.DLRConsultoria.entity.ServerConfigEntity;
 import com.joaod.DLRConsultoria.repository.ConsultorRepository;
 import com.joaod.DLRConsultoria.repository.ContratoRepository;
 import com.joaod.DLRConsultoria.repository.EmpresaRepository;
+import com.joaod.DLRConsultoria.service.ConsultorService;
+import com.joaod.DLRConsultoria.service.EmpresaService;
+import com.joaod.DLRConsultoria.service.email.EnvioEmailService;
+import com.joaod.DLRConsultoria.service.email.MontarCorpoEmailService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
